@@ -1,3 +1,8 @@
+// Leila Singer
+//1/14/25
+// This code constructs the game by making the buttons work in order for the user to input into the trivia.
+
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -11,12 +16,14 @@ public class Main
   private Country[] countryArray = new Country[10];  
   // index of current shown country
   private int index = 0;
+  private int hi = 0;
 
   // GUI elements
   private JFrame jFrame = new JFrame("Countries");
   private ImageIcon img;
   private JLabel imageLabel;
   private JLabel outputLabel;
+  private JTextField input;
   
   public static void main(String[] args) {
     // Create the GUI
@@ -40,12 +47,24 @@ public class Main
     // Write a for loop that goes through the countryArray.
     // for(int i ....) {
     // Do the following inside the loop
+    for (int i=0; i<countryArray.length;i++){
       String input = scan.nextLine();
       String[] data = input.split(",");
       System.out.println("Read in " + data[0]);
       // inside the loop, create a new Country using your constructor with 3 arguments and pass in data[0], data[1], data[2], data[3] as arguments.
      // inside the loop, set countryArray[i] to the created Country object
-     
+      Country America = new Country(data[0],data[1],data[2], data[3]);
+
+        countryArray[i]=America;
+
+
+
+  }
+
+
+
+
+
     
   }
 
@@ -53,31 +72,58 @@ public class Main
   */
   public void showCountry() {
     // Get the country at index from countryArray
-    
+   
     // Use its get method to get the its image file name and save it into imagefile variable below instead of worldmap.jpg.
-    String imagefile = "worldmap.jpg";
+    String imagefile = countryArray[index].getImageFile();
     // Use the following code to create an new Image Icon and put it into the GUI
-    img = new ImageIcon("/workspaces/Countries/workspace/"+imagefile);
+    img = new ImageIcon("/workspaces/Countries/workspace/" + imagefile);
     imageLabel.setIcon(img);
   }
   
   /* nextButton should increment index. If the index is greater than 9, reset it back to 0. Clear the outputLabel to empty string using setText, and call showCountry();*/
   public void nextButtonClick()
   {
-    
+    index++;
+    if (index > 9){
+      index = 0;
+    }
+    outputLabel.setText("");
+    showCountry();
+
+
   }
   
   /* reviewButton should get the country at index from the countryArray, call its toString() method and save the result, print it out with System.out.println and as an argument to outputLabel.setText( text to print out ); */
   public void reviewButtonClick()
   {
-     
+    hi++;
+    if(hi%2==0){
+ 
+    String result = countryArray[index].toString();
+    System.out.println(result);
+    outputLabel.setText(result);
+    }
+    else{
+      outputLabel.setText("What is the name of this country?");
+    }
+    
+
   }
 
   /* quizButton should clear the outputLabel (outputLabel.setText to empty string), get the country at index from countryArray, print out a question about it like What country is this? and/or What's this country's capital?. Get the user's answer using scan.nextLine() and check if it is equal to the country's data using its get methods and print out correct or incorrect.
   */
   public void quizButtonClick()
   {
-    Scanner scan = new Scanner(System.in); 
+
+    String answer = input.getText(); 
+    if (countryArray[index].getName().contentEquals(answer)){
+      outputLabel.setText("correct!");
+    }
+
+    else{
+      outputLabel.setText("wrong");
+    }
+    
     
     
     
@@ -108,7 +154,13 @@ public Main() {
         outputLabel = new JLabel();
         jFrame.add(imageLabel);
         jFrame.add(outputLabel);
+         //add input
+        input= new JTextField(25);
+        jFrame.add(input);
+
+       
         jFrame.setVisible(true);
+        
         // add event listener for button click
         reviewButton.addActionListener(new ActionListener() {
     public void actionPerformed(ActionEvent e) 
